@@ -42,3 +42,28 @@ The analysis presented in the [manuscript](https://www.biorxiv.org/content/10.11
 ## License
 
 ```MaxFuse``` is under the [Academic Software License Agreement](https://github.com/shuxiaoc/maxfuse/blob/main/LICENSE), please use accordingly.
+
+
+## Citation
+
+If you use **MaxFuse** in your research, please cite the following paper:
+
+**Chen, S., Zhu, B., Huang, S., Hickey, J. W., Lin, K. Z., Snyder, M., Greenleaf, W. J., Nolan, G. P., Zhang, N. R. & Ma, Z.**  
+*Integration of spatial and single-cell data across modalities with weakly linked features.*  
+**Nature Biotechnology** **42**, 1096–1106 (2024).  
+https://doi.org/10.1038/s41587-023-01935-0 :contentReference[oaicite:1]{index=1}
+
+```bibtex
+@article{chen2024integration,
+  title={Integration of spatial and single-cell data across modalities with weakly linked features},
+  author={Chen, Shuxiao and Zhu, Bokai and Huang, Sijia and Hickey, John W and Lin, Kevin Z and Snyder, Michael and Greenleaf, William J and Nolan, Garry P and Zhang, Nancy R and Ma, Zongming},
+  journal={Nature Biotechnology},
+  volume={42},
+  number={7},
+  pages={1096--1106},
+  year={2024},
+  publisher={Nature Publishing Group US New York}
+}
+```
+
+

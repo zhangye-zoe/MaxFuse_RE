@@ -51,7 +51,7 @@ If you use **MaxFuse** in your research, please cite the following paper:
 **Chen, S., Zhu, B., Huang, S., Hickey, J. W., Lin, K. Z., Snyder, M., Greenleaf, W. J., Nolan, G. P., Zhang, N. R. & Ma, Z.**  
 *Integration of spatial and single-cell data across modalities with weakly linked features.*  
 **Nature Biotechnology** **42**, 1096–1106 (2024).  
-https://doi.org/10.1038/s41587-023-01935-0 :contentReference[oaicite:1]{index=1}
+https://doi.org/10.1038/s41587-023-01935-0
 
 ```bibtex
 @article{chen2024integration,

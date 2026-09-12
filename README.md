@@ -1,57 +1,250 @@
-# MaxFuse: MAtching X-modality via FUzzy Smoothed Embedding
+# MaxFuse Reproduction
+
+[![GitHub stars](https://img.shields.io/github/stars/zhangye-zoe/MaxFuse_RE?style=flat&logo=github)](https://github.com/zhangye-zoe/MaxFuse_RE/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/zhangye-zoe/MaxFuse_RE?style=flat&logo=github)](https://github.com/zhangye-zoe/MaxFuse_RE/network/members)
+[![License](https://img.shields.io/badge/License-Academic-green.svg)](LICENSE)
+
+This repository contains adapted code for reproducing **MaxFuse** on the **PBMC** and **BMMC** multi-omics datasets, including model training, cross-omics prediction, latent-space visualization, and reproduction evaluation.
 
 
-<img src="https://github.com/shuxiaoc/maxfuse/blob/main/media/ai_generated_icon.png" width="100" height="100">
+## 1. 🚀 Installation
 
-## Description
+Create or activate the MaxFuse environment and install this repository from the project root:
 
-MaxFuse is a Python package for integrating single-cell datasets from different modalities with no overlapping features and/or under low signal-to-noise ratio regimes. For most single-cell cross modality integration methods, the feasibility of cross-modal integration relies on the existence of highly correlated, a priori 'linked' features.  When such linked features are few or uninformative, a scenario that we call 'weak linkage', existing methods fail.  We developed MaxFuse, a cross-modal data integration method that, through iterative co-embedding, data smoothing, and cell matching, leverages all information in each modality to obtain high-quality integration. A prototypical example of weak linkage is the integration of **spatial proteomic data** with **single-cell sequencing data**. For details, please refer to the [paper]([https://www.biorxiv.org/content/10.1101/2023.01.12.523851](https://www.nature.com/articles/s41587-023-01935-0)).
-
-This work has been led by Shuxiao Chen from [Ma Lab](http://www-stat.wharton.upenn.edu/~zongming/) @Upenn and Bokai Zhu from [Nolan lab](https://web.stanford.edu/group/nolan/) @Stanford.
-
-<img src="https://github.com/shuxiaoc/maxfuse/blob/main/media/fig1.png" width="800" height="280">
-
-## Installation
-MaxFuse is hosted on `pypi` and can be installed via `pip`. We recommend working with a fresh virtual environment. In the following example we use conda.
-
-```
-conda create -n maxfuse python=3.8
+```bash
 conda activate maxfuse
-python -m pip install maxfuse
+pip install -e .
 ```
 
-## Vignettes
 
-<!-- linke to sphinx ? -->
+For the original implementation and documentation, please refer to the [official MaxFuse repository](https://github.com/shuxiaoc/maxfuse).
 
-<!-- two ipynb link: -->
-Example1: Protein -- RNA test run on ground-truth CITE-seq [here](https://github.com/shuxiaoc/maxfuse/blob/main/docs/citeseq_pbmc_evaluate.ipynb).
+---
 
-Example2: Protein -- RNA test run on tissue [here](https://github.com/shuxiaoc/maxfuse/blob/main/docs/tonsil_codex_rnaseq.ipynb).
+## 2. 📊 Data Preparation
 
-Note in cases when integrating single cell data across **protein** and **RNA** modalities, many times the nomenclature of features are different (e.g., mRNA ```ITGAM``` could be named as ```CD11b-1``` when used as antibody). We gathered a [.csv](https://github.com/shuxiaoc/maxfuse/blob/main/docs/protein_gene_conversion.csv) file that covers many of such naming conversions and used during the ```MaxFuse``` process. Of course, this is not a complete conversion, and users should manually add in new naming conversions if they were not included in this .csv file. 
+Data preprocessing and partial-pairing split generation are performed in the companion [**scMRDR_RE**](https://github.com/zhangye-zoe/scMRDR_RE) repository.
 
-## API documentation
+This MaxFuse reproduction **does not regenerate the datasets**. Instead, the training scripts directly read the preprocessed files generated for the scMRDR reproduction. This keeps the input data, validation cells, and pairing ratios consistent across methods.
 
-For detailed documentation of ```MaxFuse``` API, you can visit our [readthedocs](https://maxfuse.readthedocs.io/en/latest/) page.
+### PBMC RNA–ATAC
 
-## Code archive
+The PBMC training script reads:
 
-The analysis presented in the [manuscript](https://www.biorxiv.org/content/10.1101/2023.01.12.523851) was also deposited in this GitHub repository, under this [folder](https://github.com/shuxiaoc/maxfuse/tree/main/Archive). Note in the manuscript we used a development version of ```MaxFuse``` with slightly different grammar and can also be found there. If you require additional information on the analysis/data, please contact Zongming Ma (zongming.ma@yale.edu).
+```text
+/data5/zhangye/scMRDR/input/PBMC/preprocessed_input/
+├── ATAC_gas.h5ad
+└── results_ratio_loop/
+    ├── single_000/
+    ├── single_020/
+    ├── single_040/
+    ├── single_060/
+    ├── single_080/
+    └── single_100/
+```
 
-## License
+The corresponding data-generation workflow is available in:
 
-```MaxFuse``` is under the [Academic Software License Agreement](https://github.com/shuxiaoc/maxfuse/blob/main/LICENSE), please use accordingly.
+[**scMRDR_RE — PBMC data preparation**](https://github.com/zhangye-zoe/scMRDR_RE)
 
+### BMMC RNA–ATAC
 
-## Citation
+The BMMC training script reads:
 
-If you use **MaxFuse** in your research, please cite the following paper:
+```text
+/data5/zhangye/scMRDR/input/BMMC/preprocessed_input/RNA_ATAC/
+├── ATAC_gas.h5ad
+└── results_ratio_loop_rna_atac/
+    ├── single_000/
+    ├── single_020/
+    ├── single_040/
+    ├── single_060/
+    ├── single_080/
+    └── single_100/
+```
 
-**Chen, S., Zhu, B., Huang, S., Hickey, J. W., Lin, K. Z., Snyder, M., Greenleaf, W. J., Nolan, G. P., Zhang, N. R. & Ma, Z.**  
-*Integration of spatial and single-cell data across modalities with weakly linked features.*  
-**Nature Biotechnology** **42**, 1096–1106 (2024).  
-https://doi.org/10.1038/s41587-023-01935-0
+The corresponding data-generation workflow is also available in:
+
+[**scMRDR_RE — BMMC data preparation**](https://github.com/zhangye-zoe/scMRDR_RE)
+
+The directory labels use the **single-modality fraction**:
+
+```text
+single_100 -> 0% paired data
+single_080 -> 20% paired data
+single_060 -> 40% paired data
+single_040 -> 60% paired data
+single_020 -> 80% paired data
+single_000 -> 100% paired data
+```
+
+Equivalently:
+
+```text
+Pairing Ratio = 100% - Single-modality Ratio
+```
+
+> **Note:** If the scMRDR data are stored in a different location, update `INPUT_DIR`, `SPLIT_ROOT`, and `ATAC_GAS_PATH` in the corresponding MaxFuse training script.
+
+---
+
+## 3. 🧠 Model Training
+
+The reproduction scripts are stored under:
+
+```text
+scripts/
+├── train_pbmc.py
+├── train_maxfuse_pbmc.py
+└── train_maxfuse_bmmc.py
+```
+
+`train_pbmc.py` is the recommended PBMC reproduction script.  
+`train_maxfuse_pbmc.py` is retained as an earlier/reference version.
+
+### PBMC RNA–ATAC
+
+**Dataset:** PBMC  
+**Modalities:** RNA + ATAC  
+**Prediction direction:** **ATAC → RNA**
+
+Run:
+
+```bash
+python scripts/train_pbmc.py
+```
+
+The script reads the PBMC splits generated by `scMRDR_RE`, trains MaxFuse for all configured pairing ratios, performs ATAC-to-RNA prediction, and saves the evaluation outputs under:
+
+```text
+output/PBMC/MaxFuse_results/
+```
+
+The ratio-specific outputs follow:
+
+```text
+output/PBMC/MaxFuse_results/
+├── single_000/
+├── single_020/
+├── single_040/
+├── single_060/
+├── single_080/
+├── single_100/
+└── summary_all_ratios_MaxFuse.csv
+```
+
+### BMMC RNA–ATAC
+
+**Dataset:** BMMC  
+**Modalities:** RNA + ATAC  
+**Prediction direction:** **ATAC → RNA**
+
+Run:
+
+```bash
+python scripts/train_maxfuse_bmmc.py
+```
+
+The script reads the BMMC RNA–ATAC splits generated by `scMRDR_RE`, trains MaxFuse for all configured pairing ratios, performs ATAC-to-RNA prediction, and saves the outputs under:
+
+```text
+output/BMMC/MaxFuse_results/
+```
+
+The ratio-specific outputs follow:
+
+```text
+output/BMMC/MaxFuse_results/
+├── single_000/
+├── single_020/
+├── single_040/
+├── single_060/
+├── single_080/
+├── single_100/
+└── summary_all_ratios_MaxFuse.csv
+```
+
+For each ratio, the scripts save matching information, prediction outputs, and evaluation metrics including FOSCTTM, paired embedding distance, Pearson correlation, and RMSE.
+
+---
+
+## 4. 🎨 Visualization
+
+Aligned latent-space visualizations will be provided under:
+
+```text
+notebooks/
+└── visualization/
+    ├── pbmc_maxfuse_umap.ipynb
+    └── bmmc_maxfuse_umap.ipynb
+```
+
+The planned notebooks will visualize the MaxFuse-aligned representations by:
+
+- **modality**
+- **cell type**
+- **partial-pairing ratio**
+
+The PBMC visualization will use the same externally generated cell-type annotations used in the scMRDR reproduction, while BMMC cell-type annotations will be read directly from the dataset.
+
+> **Status:** Visualization notebooks will be added after the training reproduction is finalized.
+
+---
+
+## 5. 📈 Reproduction Results
+
+The reproduction uses the same pairing-ratio convention as the scMRDR experiments:
+
+```text
+Pairing Ratio = 100% - Single-modality Ratio
+```
+
+The current evaluation reports:
+
+- **FOSCTTM (FOS) ↓**
+- **Paired Embedding Distance (PED) ↓**
+- **Pearson correlation (Pear) ↑**
+- **RMSE ↓**
+
+FOS and Pearson are reported as percentages in the summary tables below.
+
+### 5.1 PBMC — RNA–ATAC
+
+**Dataset:** PBMC  
+**Modalities:** RNA + ATAC  
+**Prediction direction:** **ATAC → RNA**
+
+| Pairing Ratio | FOS ↓ (%) | PED ↓ | Pear ↑ (%) | RMSE ↓ |
+| ---: | ---: | ---: | ---: | ---: |
+| 0% | TBD | TBD | TBD | TBD |
+| 20% | TBD | TBD | TBD | TBD |
+| 40% | TBD | TBD | TBD | TBD |
+| 60% | TBD | TBD | TBD | TBD |
+| 80% | TBD | TBD | TBD | TBD |
+| 100% | TBD | TBD | TBD | TBD |
+
+### 5.2 BMMC — RNA–ATAC
+
+**Dataset:** BMMC  
+**Modalities:** RNA + ATAC  
+**Prediction direction:** **ATAC → RNA**
+
+| Pairing Ratio | FOS ↓ (%) | PED ↓ | Pear ↑ (%) | RMSE ↓ |
+| ---: | ---: | ---: | ---: | ---: |
+| 0% | TBD | TBD | TBD | TBD |
+| 20% | TBD | TBD | TBD | TBD |
+| 40% | TBD | TBD | TBD | TBD |
+| 60% | TBD | TBD | TBD | TBD |
+| 80% | TBD | TBD | TBD | TBD |
+| 100% | TBD | TBD | TBD | TBD |
+
+> **Status:** Numerical reproduction results will be added after all ratio runs are completed and checked against the values reported in the paper.
+
+---
+
+## 6. 📖 Citation
+
+If this reproduction is useful for your work, please cite the original MaxFuse paper:
 
 ```bibtex
 @article{chen2024integration,
@@ -66,4 +259,4 @@ https://doi.org/10.1038/s41587-023-01935-0
 }
 ```
 
-
+This repository is an adapted reproduction based on the official [**MaxFuse**](https://github.com/shuxiaoc/maxfuse) implementation. The preprocessed PBMC and BMMC inputs are shared with [**scMRDR_RE**](https://github.com/zhangye-zoe/scMRDR_RE) to enable consistent cross-method comparison.
